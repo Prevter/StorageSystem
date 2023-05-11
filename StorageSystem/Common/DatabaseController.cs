@@ -129,5 +129,55 @@ namespace StorageSystem.Common
 
 		#endregion
 
+		#region Shop
+
+		public static IEnumerable<Shop> GetShops()
+		{
+			var command = new SqlCommand("SELECT * FROM Shop", Connection);
+			var reader = command.ExecuteReader();
+
+			while (reader.Read())
+			{
+				yield return new Shop
+				{
+					Id = reader.GetString(0),
+					Name = reader.GetString(1),
+					Floor = reader.GetInt32(2),
+					Location = reader.GetString(3)
+				};
+			}
+
+			reader.Close();
+		}
+
+		public static void InsertShop(Shop shop)
+		{
+			var command = new SqlCommand("INSERT INTO Shop (shop_id, name, floor, location) VALUES (@id, @name, @floor, @location)", Connection);
+			command.Parameters.AddWithValue("@id", shop.Id);
+			command.Parameters.AddWithValue("@name", shop.Name);
+			command.Parameters.AddWithValue("@floor", shop.Floor);
+			command.Parameters.AddWithValue("@location", shop.Location);
+			command.ExecuteNonQuery();
+		}
+
+		public static void UpdateShop(string id, Shop shop)
+		{
+			var command = new SqlCommand("UPDATE Shop SET shop_id = @id, name = @name, floor = @floor, location = @location WHERE shop_id = @oldId", Connection);
+			command.Parameters.AddWithValue("@id", shop.Id);
+			command.Parameters.AddWithValue("@name", shop.Name);
+			command.Parameters.AddWithValue("@floor", shop.Floor);
+			command.Parameters.AddWithValue("@location", shop.Location);
+			command.Parameters.AddWithValue("@oldId", id);
+			command.ExecuteNonQuery();
+		}
+
+		public static void DeleteShop(string id)
+		{
+			var command = new SqlCommand("DELETE FROM Shop WHERE shop_id = @id", Connection);
+			command.Parameters.AddWithValue("@id", id);
+			command.ExecuteNonQuery();
+		}
+
+		#endregion
 	}
 }
