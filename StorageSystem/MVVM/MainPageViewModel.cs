@@ -1,4 +1,5 @@
 ﻿using StorageSystem.Assets;
+using StorageSystem.Common;
 using System.Collections.Generic;
 
 namespace StorageSystem.MVVM
@@ -35,43 +36,15 @@ namespace StorageSystem.MVVM
 
 	public sealed class MainPageViewModel : BaseViewModel
 	{
-		public List<NavigationPage> Pages { get; set; } = new()
-		{
-			new()
-			{
-				Filename = "../Pages/ProductsPage.xaml",
-				Title = "Продукти",
-				Icon = PageIcons.Product,
-				IsSelected = true
-			},
-			new()
-			{
-				Filename = "../Pages/ManufacturersPage.xaml",
-				Title = "Виробники",
-				Icon = PageIcons.Manufacturer
-			},
-			new()
-			{
-				Filename = "../Pages/ShopsPage.xaml",
-				Title = "Магазини",
-				Icon = PageIcons.Shop
-			},
-			new()
-			{
-				Filename = "../Pages/StoragesPage.xaml",
-				Title = "Склади",
-				Icon = PageIcons.Storage
-			},
-			new()
-			{
-				Filename = "../Pages/ReceiptsPage.xaml",
-				Title = "Звіти",
-				Icon = PageIcons.Receipt
-			},
-		};
+		public List<NavigationPage> Pages { get; set; }
 
 		private string _currentPage;
 		private RelayCommand _logoutCommand, _selectPageCommand;
+
+		public string Username
+		{
+			get => DatabaseController.Username;
+		}
 
 		public string CurrentPage
 		{
@@ -105,6 +78,42 @@ namespace StorageSystem.MVVM
 
 		public MainPageViewModel()
 		{
+			// TODO: Initialize pages according to permissions
+			Pages = new()
+			{
+				new()
+				{
+					Filename = "../Pages/ProductsPage.xaml",
+					Title = "Продукти",
+					Icon = PageIcons.Product,
+					IsSelected = true
+				},
+				new()
+				{
+					Filename = "../Pages/ManufacturersPage.xaml",
+					Title = "Виробники",
+					Icon = PageIcons.Manufacturer
+				},
+				new()
+				{
+					Filename = "../Pages/ShopsPage.xaml",
+					Title = "Магазини",
+					Icon = PageIcons.Shop
+				},
+				new()
+				{
+					Filename = "../Pages/StoragesPage.xaml",
+					Title = "Склади",
+					Icon = PageIcons.Storage
+				},
+				new()
+				{
+					Filename = "../Pages/ReceiptsPage.xaml",
+					Title = "Звіти",
+					Icon = PageIcons.Receipt
+				},
+			};
+
 			SelectPageCommand.Execute(Pages[0]);
 		}
 	}

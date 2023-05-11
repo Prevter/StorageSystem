@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StorageSystem.Common;
+using System;
 using System.Windows;
 
 namespace StorageSystem
@@ -21,6 +22,11 @@ namespace StorageSystem
 		public static void ChangeTitle(string title)
 		{
 			TitleChanged?.Invoke(null, title);
+		}
+
+		public App()
+		{
+			AppHelpers.Settings = Settings.Load();
 		}
 	}
 }

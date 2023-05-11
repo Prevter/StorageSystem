@@ -8,10 +8,14 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Styles/ColorScheme.xaml"/>
                 <ResourceDictionary Source="Styles/TextBoxStyle.xaml"/>
+                <ResourceDictionary Source="Styles/ButtonStyle.xaml"/>
                 <ResourceDictionary Source="Styles/ComboBoxStyle.xaml"/>
+                <ResourceDictionary Source="Styles/ScrollBarStyle.xaml"/>
+                <ResourceDictionary Source="Styles/CheckBoxStyle.xaml"/>
 
                 <ResourceDictionary Source="Assets/StorageIcon.xaml"/>
                 <ResourceDictionary Source="Assets/LogoutIcon.xaml"/>
+                <ResourceDictionary Source="Assets/ControlIcons.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

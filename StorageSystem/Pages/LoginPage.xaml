@@ -71,35 +71,39 @@
                 </TextBox.InputBindings>
             </TextBox>
 
-            <Button Content="Увійти" Command="{Binding LoginCommand}" Grid.Row="3" Grid.ColumnSpan="2" Height="32" FontWeight="DemiBold" FontSize="16">
-                <Button.Style>
-                    <Style TargetType="Button">
-                        <Setter Property="Background" Value="{DynamicResource ButtonsBackground}"/>
-                        <Setter Property="Foreground" Value="{DynamicResource ButtonsForeground}"/>
-                        <Setter Property="BorderThickness" Value="1"/>
-
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="{x:Type Button}">
-                                    <Border Background="{TemplateBinding Background}" CornerRadius="4" BorderBrush="Black" BorderThickness="{TemplateBinding BorderThickness}">
-                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                    </Border>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="{DynamicResource ButtonsHoverBackground}"/>
-                            </Trigger>
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter Property="Background" Value="{DynamicResource ButtonsDisabledBackground}"/>
-                                <Setter Property="Foreground" Value="{DynamicResource ButtonsDisabledForeground}"/>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </Button.Style>
-            </Button>
+            <Button Content="Увійти" Command="{Binding LoginCommand}" Grid.Row="3" Grid.ColumnSpan="2" 
+                    Height="32" FontWeight="DemiBold" FontSize="16"/>
         </Grid>
+
+        <Button Content="Налаштування серверу" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Center" Background="Transparent" Cursor="Hand"
+                Margin="8" Foreground="#4444EE" BorderThickness="0" Command="{Binding OpenServerEditCommand}"/>
+
+        <Grid Grid.ColumnSpan="2" Visibility="{Binding ModalVisibility}">
+            <Rectangle Fill="#80000000"/>
+            <Border HorizontalAlignment="Center" VerticalAlignment="Center" Width="400" Height="110" Background="White" CornerRadius="8">
+                <Grid Margin="12">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Text="Адреса серверу:" FontSize="16" Margin="0,0,6,4"/>
+                    <TextBox Text="{Binding ServerAddress, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" FontSize="16" Margin="0,0,0,4"/>
+
+                    <TextBlock Text="Назва бази даних:" Grid.Row="1" FontSize="16" Margin="0,0,6,4"/>
+                    <TextBox Text="{Binding ServerDatabase, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="1" FontSize="16" Margin="0,0,0,4"/>
+
+                    <Button Content="Зберегти та закрити" Command="{Binding SaveCommand}" Margin="0,4,2,0" Height="24" Grid.Row="2" Grid.ColumnSpan="2"/>
+                </Grid>
+            </Border>
+        </Grid>
+        
     </Grid>
 </Page>

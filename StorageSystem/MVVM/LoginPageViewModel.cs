@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using StorageSystem.Common;
+using System;
+using System.Windows;
 
 namespace StorageSystem.MVVM
 {
@@ -7,7 +9,10 @@ namespace StorageSystem.MVVM
 		private string _username = "";
 		private string _password = "";
 
-		private RelayCommand _loginCommand;
+		private string _serverAddress = AppHelpers.Settings.DataSource, _serverDatabase = AppHelpers.Settings.InitialCatalog;
+		private RelayCommand _loginCommand, _saveCommand, _openServerEditCommand;
+
+		private Visibility _modalVisibility = Visibility.Collapsed;
 
 		public string Username
 		{
@@ -21,6 +26,24 @@ namespace StorageSystem.MVVM
 			set => SetField(ref _password, value);
 		}
 
+		public string ServerAddress
+		{
+			get => _serverAddress;
+			set => SetField(ref _serverAddress, value);
+		}
+
+		public string ServerDatabase
+		{
+			get => _serverDatabase;
+			set => SetField(ref _serverDatabase, value);
+		}
+
+		public Visibility ModalVisibility
+		{
+			get => _modalVisibility;
+			set => SetField(ref _modalVisibility, value);
+		}
+
 		public LoginPageViewModel()
 		{
 			Username = "";
@@ -31,15 +54,34 @@ namespace StorageSystem.MVVM
 		{
 			get => _loginCommand ??= new RelayCommand(obj =>
 			{
-				// TODO: Connect to database and check credentials
-				if (Username == "admin" && Password == "admin")
+				try 
 				{
+					DatabaseController.TryConnect(Username, Password);
 					App.ChangePage("../Pages/MainPage.xaml", "Головна");
 				}
-				else
+				catch (Exception e)
 				{
-					MessageBox.Show("Невірний пароль чи логін", "Помилка", MessageBoxButton.OK, MessageBoxImage.Error);
+					MessageBox.Show(e.Message, "Помилка", MessageBoxButton.OK, MessageBoxImage.Error);
 				}
+			});
+		}
+
+		public RelayCommand SaveCommand
+		{
+			get => _saveCommand ??= new RelayCommand(obj =>
+			{
+				AppHelpers.Settings.DataSource = ServerAddress;
+				AppHelpers.Settings.InitialCatalog = ServerDatabase;
+				AppHelpers.Settings.Save();
+				ModalVisibility = Visibility.Collapsed;
+			});
+		}
+
+		public RelayCommand OpenServerEditCommand
+		{
+			get => _openServerEditCommand ??= new RelayCommand(obj =>
+			{
+				ModalVisibility = Visibility.Visible;
 			});
 		}
 	}
