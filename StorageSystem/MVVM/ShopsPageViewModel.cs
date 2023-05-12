@@ -127,8 +127,8 @@ namespace StorageSystem.MVVM
 
 				selected.ForEach(s => DatabaseController.DeleteShop(s.Id));
 
-				Shops.RemoveAll(product => product.Selected);
-				Shops.ForEach(product => product.Selected = false);
+				Shops.RemoveAll(shop => shop.Selected);
+				Shops.ForEach(shop => shop.Selected = false);
 			});
 		}
 
@@ -186,7 +186,7 @@ namespace StorageSystem.MVVM
 								s.Floor = floor;
 							}
 
-							DatabaseController.UpdateShop(_editedStartId, shop);
+							DatabaseController.UpdateShop(shop);
 						});
 					}
 
@@ -341,12 +341,13 @@ namespace StorageSystem.MVVM
 
 			foreach (var s in DatabaseController.GetShops())
 				Shops.Add(new ShopVM(s));
-
-			var manufacturers = DatabaseController.GetManufacturers().ToList();
+			
+			// var manufacturers = DatabaseController.GetManufacturers().ToList();
 			foreach (var p in DatabaseController.GetProducts())
 			{
-				var manufacturer = manufacturers.First(m => m.Id.Trim() == p.ManufacturerId.Trim());
-				Products.Add(new ProductVM(p, new ManufacturerVM(manufacturer)));
+				// var manufacturer = manufacturers.First(m => m.Id.Trim() == p.ManufacturerId.Trim());
+				// we could add manufacturer data to our products, but we don't need it here.
+				Products.Add(new ProductVM(p, new ManufacturerVM()));
 			}
 
 		}

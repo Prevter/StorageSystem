@@ -1,10 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using StorageSystem.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StorageSystem.Common
 {
@@ -25,7 +21,7 @@ namespace StorageSystem.Common
 			Password = password;
 
 			string connectionString = $"Data Source={AppHelpers.Settings.DataSource};Initial Catalog={AppHelpers.Settings.InitialCatalog};TrustServerCertificate=true;Persist Security Info=False";
-			
+
 			if (!string.IsNullOrEmpty(user))
 				connectionString += $";User ID={user}";
 			if (!string.IsNullOrEmpty(password))
@@ -207,7 +203,7 @@ namespace StorageSystem.Common
 			command.ExecuteNonQuery();
 		}
 
-		public static void UpdateShop(string id, Shop shop)
+		public static void UpdateShop(Shop shop)
 		{
 			var command = new SqlCommand("UPDATE Shop SET name = @name, floor = @floor, location = @location WHERE shop_id = @id", Connection);
 			command.Parameters.AddWithValue("@id", shop.Id);
@@ -273,5 +269,50 @@ namespace StorageSystem.Common
 		}
 
 		#endregion
+
+		#region Storages
+
+		public static IEnumerable<Storage> GetStorages()
+		{
+			var command = new SqlCommand("SELECT * FROM Storage", Connection);
+			var reader = command.ExecuteReader();
+
+			while (reader.Read())
+			{
+				yield return new Storage
+				{
+					Id = reader.GetString(0),
+					Address = reader.GetString(1),
+				};
+			}
+
+			reader.Close();
+		}
+
+		public static void InsertStorage(Storage storage)
+		{
+			var command = new SqlCommand("INSERT INTO Storage (storage_id, address) VALUES (@id, @address)", Connection);
+			command.Parameters.AddWithValue("@id", storage.Id);
+			command.Parameters.AddWithValue("@address", storage.Address);
+			command.ExecuteNonQuery();
+		}
+
+		public static void UpdateStorage(Storage storage)
+		{
+			var command = new SqlCommand("UPDATE Storage SET address = @address WHERE storage_id = @id", Connection);
+			command.Parameters.AddWithValue("@id", storage.Id);
+			command.Parameters.AddWithValue("@address", storage.Address);
+			command.ExecuteNonQuery();
+		}
+
+		public static void DeleteStorage(string id)
+		{
+			var command = new SqlCommand("DELETE FROM Storage WHERE storage_id = @id", Connection);
+			command.Parameters.AddWithValue("@id", id);
+			command.ExecuteNonQuery();
+		}
+
+		#endregion
+
 	}
 }

@@ -1,12 +1,10 @@
 ﻿<Page x:Class="StorageSystem.Pages.ProductsPage"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:StorageSystem.Pages"
-      xmlns:mvvm="clr-namespace:StorageSystem.MVVM"
-      mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800">
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:StorageSystem.Pages"
+    xmlns:mvvm="clr-namespace:StorageSystem.MVVM" mc:Ignorable="d" d:DesignHeight="450" d:DesignWidth="800">
     <Page.DataContext>
         <mvvm:ProductsPageViewModel/>
     </Page.DataContext>
@@ -17,30 +15,26 @@
         </Grid.RowDefinitions>
 
         <StackPanel Orientation="Horizontal" Margin="12,12,0,5" Visibility="{Binding EditModeControls}">
-            <Button Command="{Binding AddProductCommand}" Height="32" 
-                    FontWeight="DemiBold" FontSize="14" Width="120" Margin="0,0,6,0">
+            <Button Command="{Binding AddProductCommand}" Height="32" FontWeight="DemiBold" FontSize="14" Width="120" Margin="0,0,6,0">
                 <Button.Content>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <Path Stretch="Uniform" Fill="Black" Data="{DynamicResource AddIcon}"
-                            Margin="0,0,4,0" MaxWidth="16" VerticalAlignment="Center"/>
+                        <Path Stretch="Uniform" Fill="Black" Data="{DynamicResource AddIcon}" Margin="0,0,4,0" MaxWidth="16" VerticalAlignment="Center"/>
                         <TextBlock Text="Створити" HorizontalAlignment="Left" Grid.Column="1" VerticalAlignment="Center"/>
                     </Grid>
                 </Button.Content>
             </Button>
-            <Button Command="{Binding RemoveProductsCommand}" Height="32" 
-                    FontWeight="DemiBold" FontSize="14" Width="120">
+            <Button Command="{Binding RemoveProductsCommand}" Height="32" FontWeight="DemiBold" FontSize="14" Width="120">
                 <Button.Content>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <Path Stretch="Uniform" Fill="Black" Data="{DynamicResource DeleteIcon}"
-                            Margin="0,0,4,0" MaxWidth="16" VerticalAlignment="Center"/>
+                        <Path Stretch="Uniform" Fill="Black" Data="{DynamicResource DeleteIcon}" Margin="0,0,4,0" MaxWidth="16" VerticalAlignment="Center"/>
                         <TextBlock Text="Видалити" HorizontalAlignment="Left" Grid.Column="1" VerticalAlignment="Center"/>
                     </Grid>
                 </Button.Content>
@@ -65,11 +59,9 @@
                                 </Grid.RowDefinitions>
 
                                 <CheckBox Visibility="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.EditModeControls}" IsChecked="{Binding Selected}" Grid.RowSpan="2" VerticalAlignment="Center" Margin="8,0,0,0"/>
-                                <Button Visibility="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.EditModeControls}" CommandParameter="{Binding}" Grid.RowSpan="2" Grid.Column="1" VerticalAlignment="Center"
-                                    Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.EditCommand}">
+                                <Button Visibility="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.EditModeControls}" CommandParameter="{Binding}" Grid.RowSpan="2" Grid.Column="1" VerticalAlignment="Center" Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.EditCommand}">
                                     <Button.Content>
-                                        <Path Stretch="Uniform" Fill="Black" Data="{DynamicResource EditIcon}"
-                                            Margin="4" MaxWidth="14" VerticalAlignment="Center"/>
+                                        <Path Stretch="Uniform" Fill="Black" Data="{DynamicResource EditIcon}" Margin="4" MaxWidth="14" VerticalAlignment="Center"/>
                                     </Button.Content>
                                 </Button>
 

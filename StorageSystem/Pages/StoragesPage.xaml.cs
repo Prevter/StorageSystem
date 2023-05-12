@@ -3,11 +3,11 @@
 namespace StorageSystem.Pages
 {
 	/// <summary>
-	/// Interaction logic for HomePage.xaml
+	/// Interaction logic for StoragesPage.xaml
 	/// </summary>
-	public partial class ProductsPage : Page
+	public partial class StoragesPage : Page
 	{
-		public ProductsPage()
+		public StoragesPage()
 		{
 			InitializeComponent();
 		}
