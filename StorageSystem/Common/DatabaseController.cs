@@ -242,6 +242,25 @@ namespace StorageSystem.Common
 			reader.Close();
 		}
 
+		public static IEnumerable<ShopProduct> GetShopProducts(string shop_id)
+		{
+			var command = new SqlCommand("SELECT * FROM ShopProduct WHERE shop_id = @id", Connection);
+			command.Parameters.AddWithValue("@id", shop_id);
+			var reader = command.ExecuteReader();
+
+			while (reader.Read())
+			{
+				yield return new ShopProduct
+				{
+					ProductId = reader.GetString(0),
+					ShopId = reader.GetString(1),
+					Price = reader.GetDecimal(2)
+				};
+			}
+
+			reader.Close();
+		}
+
 		public static void InsertShopProduct(ShopProduct shopProduct)
 		{
 			var command = new SqlCommand("INSERT INTO ShopProduct (shop_id, product_id, price) VALUES (@shopId, @productId, @price)", Connection);
@@ -309,6 +328,58 @@ namespace StorageSystem.Common
 		{
 			var command = new SqlCommand("DELETE FROM Storage WHERE storage_id = @id", Connection);
 			command.Parameters.AddWithValue("@id", id);
+			command.ExecuteNonQuery();
+		}
+
+		#endregion
+
+		#region StorageProduct
+
+		public static IEnumerable<StoredProduct> GetStoredProducts()
+		{
+			var command = new SqlCommand("SELECT * FROM StoredProduct", Connection);
+			var reader = command.ExecuteReader();
+
+			while (reader.Read())
+			{
+				yield return new StoredProduct
+				{
+					ProductId = reader.GetString(0),
+					StorageId = reader.GetString(1),
+					ShopId = reader.GetString(2),
+					Amount = reader.GetInt32(3)
+				};
+			}
+
+			reader.Close();
+		}
+
+		public static void InsertStoredProduct(StoredProduct storedProduct)
+		{
+			var command = new SqlCommand("INSERT INTO StoredProduct (product_id, storage_id, shop_id, amount) VALUES (@productId, @storageId, @shopId, @amount)", Connection);
+			command.Parameters.AddWithValue("@productId", storedProduct.ProductId);
+			command.Parameters.AddWithValue("@storageId", storedProduct.StorageId);
+			command.Parameters.AddWithValue("@shopId", storedProduct.ShopId);
+			command.Parameters.AddWithValue("@amount", storedProduct.Amount);
+			command.ExecuteNonQuery();
+		}
+
+		public static void UpdateStoredProduct(StoredProduct storedProduct)
+		{
+			var command = new SqlCommand("UPDATE StoredProduct SET amount = @amount WHERE product_id = @productId AND storage_id = @storageId AND shop_id = @shopId", Connection);
+			command.Parameters.AddWithValue("@productId", storedProduct.ProductId);
+			command.Parameters.AddWithValue("@storageId", storedProduct.StorageId);
+			command.Parameters.AddWithValue("@shopId", storedProduct.ShopId);
+			command.Parameters.AddWithValue("@amount", storedProduct.Amount);
+			command.ExecuteNonQuery();
+		}
+
+		public static void DeleteStoredProduct(string productId, string storageId, string shopId)
+		{
+			var command = new SqlCommand("DELETE FROM StoredProduct WHERE product_id = @productId AND storage_id = @storageId AND shop_id = @shopId", Connection);
+			command.Parameters.AddWithValue("@productId", productId);
+			command.Parameters.AddWithValue("@storageId", storageId);
+			command.Parameters.AddWithValue("@shopId", shopId);
 			command.ExecuteNonQuery();
 		}
 

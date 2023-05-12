@@ -110,7 +110,7 @@
             </Border>
         </Grid>
 
-        <!-- Storage products list -->
+        <!-- Stored products list -->
         <Grid Grid.RowSpan="2" Visibility="{Binding ProductsModalVisibility}">
             <Rectangle Fill="#80000000"/>
             <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="50" Background="White" CornerRadius="8">
@@ -162,7 +162,7 @@
                         </Button>
                     </StackPanel>
 
-                    <ItemsControl ItemsSource="{Binding StorageProducts}" IsTabStop="False" Grid.Row="1" Margin="12">
+                    <ItemsControl ItemsSource="{Binding StoredProducts}" IsTabStop="False" Grid.Row="1" Margin="12">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Border BorderBrush="Black" BorderThickness="1" CornerRadius="4" Margin="0,0,0,4">
@@ -195,9 +195,8 @@
                                         <TextBlock Grid.Column="3" Grid.Row="1" FontSize="14" Margin="8,0,0,4" TextWrapping="WrapWithOverflow">
                                             <Run Text="Магазин:"/>
                                             <Run Text="{Binding Shop.Name}" FontWeight="Bold"/>
-                                            <Run Text="-"/>
-                                            <Run Text="{Binding Count}" FontWeight="Bold"/>
-                                            <Run Text="од."/>
+                                            <Run Text="("/><Run Text="{Binding Amount}" FontWeight="Bold"/>
+                                            <Run Text="од.)"/>
                                         </TextBlock>
 
                                     </Grid>
@@ -210,7 +209,7 @@
             </Border>
         </Grid>
 
-        <!-- Edit shop product -->
+        <!-- Edit stored product -->
         <Grid Grid.RowSpan="2" Visibility="{Binding ProductModalVisibility}">
             <Rectangle Fill="#80000000"/>
             <Border HorizontalAlignment="Center" VerticalAlignment="Center" Width="400" Height="140" Background="White" CornerRadius="8">
@@ -228,13 +227,13 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBlock Text="Магазин:" FontSize="16" Margin="0,0,6,4"/>
-                    <ComboBox ItemsSource="{Binding Shops}" IsEnabled="{Binding ReadonlyKeys, Converter={StaticResource InvertBool}}" SelectedItem="{Binding EditedProduct}" Grid.Column="1" FontSize="16" Margin="0,0,0,4"/>
+                    <ComboBox ItemsSource="{Binding Shops}" IsEnabled="{Binding ReadonlyKeys, Converter={StaticResource InvertBool}}" SelectedItem="{Binding EditedProductShop}" Grid.Column="1" FontSize="16" Margin="0,0,0,4"/>
 
                     <TextBlock Text="Продукт:" Grid.Row="1" FontSize="16" Margin="0,0,6,4"/>
                     <ComboBox ItemsSource="{Binding Products}" Grid.Row="1" IsEnabled="{Binding ReadonlyKeys, Converter={StaticResource InvertBool}}" SelectedItem="{Binding EditedProduct}" Grid.Column="1" FontSize="16" Margin="0,0,0,4"/>
 
                     <TextBlock Text="Кількість:" Grid.Row="2" FontSize="16" Margin="0,0,6,4"/>
-                    <common:NumericTextBox IsDecimal="False" Text="{Binding EditedCount, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="2" FontSize="16" Margin="0,0,0,4"/>
+                    <common:NumericTextBox IsDecimal="False" Text="{Binding EditedProductAmount, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="2" FontSize="16" Margin="0,0,0,4"/>
 
                     <Grid Grid.Row="3" Grid.ColumnSpan="2">
                         <Grid.ColumnDefinitions>
