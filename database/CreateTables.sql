@@ -1,6 +1,6 @@
 USE StorageSystem
 
--- Видалити таблиці
+-- Р’РёРґР°Р»РёС‚Рё С‚Р°Р±Р»РёС†С–
 
 IF EXISTS (SELECT name FROM sys.objects WHERE name = 'StoredProduct' AND type_desc = 'USER_TABLE')
     DROP TABLE StoredProduct
@@ -20,7 +20,7 @@ IF EXISTS (SELECT name FROM sys.objects WHERE name = 'Shop' AND type_desc = 'USE
 IF EXISTS (SELECT name FROM sys.objects WHERE name = 'Manufacturer' AND type_desc = 'USER_TABLE')
     DROP TABLE Manufacturer
 
--- Створити таблиці
+-- РЎС‚РІРѕСЂРёС‚Рё С‚Р°Р±Р»РёС†С–
 
 CREATE TABLE Manufacturer (
     manufacturer_id CHAR(10) PRIMARY KEY,

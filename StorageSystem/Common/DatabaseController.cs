@@ -78,7 +78,7 @@ namespace StorageSystem.Common
 
 		public static void InsertManufacturer(Manufacturer manufacturer)
 		{
-			var command = new SqlCommand("INSERT INTO Manufacturer (manufacturer_id, name, contacts) VALUES (@id, @name, @contacts)", Connection);
+			var command = new SqlCommand("EXEC InsertManufacturer @id, @name, @contacts", Connection);
 			command.Parameters.AddWithValue("@id", manufacturer.Id);
 			command.Parameters.AddWithValue("@name", manufacturer.Name);
 			command.Parameters.AddWithValue("@contacts", manufacturer.Contacts);
@@ -147,7 +147,7 @@ namespace StorageSystem.Common
 
 		public static void InsertProduct(Product product)
 		{
-			var command = new SqlCommand("INSERT INTO Product (product_id, name, manufacturer_id) VALUES (@id, @name, @manufacturer)", Connection);
+			var command = new SqlCommand("EXEC InsertProduct @id, @name, @manufacturer", Connection);
 			command.Parameters.AddWithValue("@id", product.Id);
 			command.Parameters.AddWithValue("@name", product.Name);
 			command.Parameters.AddWithValue("@manufacturer", product.ManufacturerId);
@@ -195,7 +195,7 @@ namespace StorageSystem.Common
 
 		public static void InsertShop(Shop shop)
 		{
-			var command = new SqlCommand("INSERT INTO Shop (shop_id, name, floor, location) VALUES (@id, @name, @floor, @location)", Connection);
+			var command = new SqlCommand("EXEC InsertShop @id, @name, @floor, @location", Connection);
 			command.Parameters.AddWithValue("@id", shop.Id);
 			command.Parameters.AddWithValue("@name", shop.Name);
 			command.Parameters.AddWithValue("@floor", shop.Floor);
@@ -263,7 +263,7 @@ namespace StorageSystem.Common
 
 		public static void InsertShopProduct(ShopProduct shopProduct)
 		{
-			var command = new SqlCommand("INSERT INTO ShopProduct (shop_id, product_id, price) VALUES (@shopId, @productId, @price)", Connection);
+			var command = new SqlCommand("EXEC InsertShopProduct @productId, @shopId, @price", Connection);
 			command.Parameters.AddWithValue("@shopId", shopProduct.ShopId);
 			command.Parameters.AddWithValue("@productId", shopProduct.ProductId);
 			command.Parameters.AddWithValue("@price", shopProduct.Price);
@@ -310,7 +310,7 @@ namespace StorageSystem.Common
 
 		public static void InsertStorage(Storage storage)
 		{
-			var command = new SqlCommand("INSERT INTO Storage (storage_id, address) VALUES (@id, @address)", Connection);
+			var command = new SqlCommand("EXEC InsertStorage @id, @address", Connection);
 			command.Parameters.AddWithValue("@id", storage.Id);
 			command.Parameters.AddWithValue("@address", storage.Address);
 			command.ExecuteNonQuery();
@@ -356,7 +356,7 @@ namespace StorageSystem.Common
 
 		public static void InsertStoredProduct(StoredProduct storedProduct)
 		{
-			var command = new SqlCommand("INSERT INTO StoredProduct (product_id, storage_id, shop_id, amount) VALUES (@productId, @storageId, @shopId, @amount)", Connection);
+			var command = new SqlCommand("EXEC InsertStoredProduct @productId, @storageId, @shopId, @amount", Connection);
 			command.Parameters.AddWithValue("@productId", storedProduct.ProductId);
 			command.Parameters.AddWithValue("@storageId", storedProduct.StorageId);
 			command.Parameters.AddWithValue("@shopId", storedProduct.ShopId);
