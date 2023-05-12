@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using StorageSystem.Models;
+using System;
 using System.Collections.Generic;
 
 namespace StorageSystem.Common
@@ -30,8 +31,13 @@ namespace StorageSystem.Common
 			Connection = new SqlConnection(connectionString);
 			Connection.Open();
 
-			// TODO: Check if user has readonly access
-			ReadonlyAccess = false;
+			using SqlCommand cmd = new($"SELECT HAS_PERMS_BY_NAME('Product', 'OBJECT', 'INSERT')", Connection);
+			object result = cmd.ExecuteScalar();
+			if (result != null && result != DBNull.Value)
+			{
+				int perm = Convert.ToInt32(result);
+				ReadonlyAccess = perm != 1;
+			}
 		}
 
 		#region Manufacturer
