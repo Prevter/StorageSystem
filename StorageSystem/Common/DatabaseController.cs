@@ -13,7 +13,12 @@ namespace StorageSystem.Common
 		public static SqlConnection Connection;
 		public static string Username = "", Password = "";
 		public static bool ReadonlyAccess;
-		
+
+		public static bool IsConnected()
+		{
+			return Connection != null;
+		}
+
 		public static void TryConnect(string user, string password)
 		{
 			Username = user;
@@ -53,6 +58,28 @@ namespace StorageSystem.Common
 			reader.Close();
 		}
 
+		public static Manufacturer? GetManufacturer(string id)
+		{
+			var command = new SqlCommand("SELECT * FROM Manufacturer WHERE manufacturer_id = @id", Connection);
+			command.Parameters.AddWithValue("@id", id);
+			var reader = command.ExecuteReader();
+
+			Manufacturer? manufacturer = null;
+
+			if (reader.Read())
+			{
+				manufacturer = new Manufacturer
+				{
+					Id = reader.GetString(0),
+					Name = reader.GetString(1),
+					Contacts = reader.GetString(2)
+				};
+			}
+
+			reader.Close();
+			return manufacturer;
+		}
+
 		public static void InsertManufacturer(Manufacturer manufacturer)
 		{
 			var command = new SqlCommand("INSERT INTO Manufacturer (manufacturer_id, name, contacts) VALUES (@id, @name, @contacts)", Connection);
@@ -62,13 +89,12 @@ namespace StorageSystem.Common
 			command.ExecuteNonQuery();
 		}
 
-		public static void UpdateManufacturer(string id, Manufacturer manufacturer)
+		public static void UpdateManufacturer(Manufacturer manufacturer)
 		{
-			var command = new SqlCommand("UPDATE Manufacturer SET manufacturer_id = @id, name = @name, contacts = @contacts WHERE manufacturer_id = @oldId", Connection);
+			var command = new SqlCommand("UPDATE Manufacturer SET name = @name, contacts = @contacts WHERE manufacturer_id = @id", Connection);
 			command.Parameters.AddWithValue("@id", manufacturer.Id);
 			command.Parameters.AddWithValue("@name", manufacturer.Name);
 			command.Parameters.AddWithValue("@contacts", manufacturer.Contacts);
-			command.Parameters.AddWithValue("@oldId", id);
 			command.ExecuteNonQuery();
 		}
 
@@ -101,6 +127,28 @@ namespace StorageSystem.Common
 			reader.Close();
 		}
 
+		public static Product? GetProduct(string id)
+		{
+			var command = new SqlCommand("SELECT * FROM Product WHERE product_id = @id", Connection);
+			command.Parameters.AddWithValue("@id", id);
+			var reader = command.ExecuteReader();
+
+			Product? result = null;
+
+			if (reader.Read())
+			{
+				result = new Product
+				{
+					Id = reader.GetString(0),
+					Name = reader.GetString(1),
+					ManufacturerId = reader.GetString(2)
+				};
+			}
+
+			reader.Close();
+			return result;
+		}
+
 		public static void InsertProduct(Product product)
 		{
 			var command = new SqlCommand("INSERT INTO Product (product_id, name, manufacturer_id) VALUES (@id, @name, @manufacturer)", Connection);
@@ -110,13 +158,12 @@ namespace StorageSystem.Common
 			command.ExecuteNonQuery();
 		}
 
-		public static void UpdateProduct(string id, Product product)
+		public static void UpdateProduct(Product product)
 		{
-			var command = new SqlCommand("UPDATE Product SET product_id = @id, name = @name, manufacturer_id = @manufacturer WHERE product_id = @oldId", Connection);
+			var command = new SqlCommand("UPDATE Product SET name = @name, manufacturer_id = @manufacturer WHERE product_id = @id", Connection);
 			command.Parameters.AddWithValue("@id", product.Id);
 			command.Parameters.AddWithValue("@name", product.Name);
 			command.Parameters.AddWithValue("@manufacturer", product.ManufacturerId);
-			command.Parameters.AddWithValue("@oldId", id);
 			command.ExecuteNonQuery();
 		}
 
@@ -162,12 +209,11 @@ namespace StorageSystem.Common
 
 		public static void UpdateShop(string id, Shop shop)
 		{
-			var command = new SqlCommand("UPDATE Shop SET shop_id = @id, name = @name, floor = @floor, location = @location WHERE shop_id = @oldId", Connection);
+			var command = new SqlCommand("UPDATE Shop SET name = @name, floor = @floor, location = @location WHERE shop_id = @id", Connection);
 			command.Parameters.AddWithValue("@id", shop.Id);
 			command.Parameters.AddWithValue("@name", shop.Name);
 			command.Parameters.AddWithValue("@floor", shop.Floor);
 			command.Parameters.AddWithValue("@location", shop.Location);
-			command.Parameters.AddWithValue("@oldId", id);
 			command.ExecuteNonQuery();
 		}
 
@@ -175,6 +221,54 @@ namespace StorageSystem.Common
 		{
 			var command = new SqlCommand("DELETE FROM Shop WHERE shop_id = @id", Connection);
 			command.Parameters.AddWithValue("@id", id);
+			command.ExecuteNonQuery();
+		}
+
+		#endregion
+
+		#region ShopProduct
+
+		public static IEnumerable<ShopProduct> GetShopProducts()
+		{
+			var command = new SqlCommand("SELECT * FROM ShopProduct", Connection);
+			var reader = command.ExecuteReader();
+
+			while (reader.Read())
+			{
+				yield return new ShopProduct
+				{
+					ProductId = reader.GetString(0),
+					ShopId = reader.GetString(1),
+					Price = reader.GetDecimal(2)
+				};
+			}
+
+			reader.Close();
+		}
+
+		public static void InsertShopProduct(ShopProduct shopProduct)
+		{
+			var command = new SqlCommand("INSERT INTO ShopProduct (shop_id, product_id, price) VALUES (@shopId, @productId, @price)", Connection);
+			command.Parameters.AddWithValue("@shopId", shopProduct.ShopId);
+			command.Parameters.AddWithValue("@productId", shopProduct.ProductId);
+			command.Parameters.AddWithValue("@price", shopProduct.Price);
+			command.ExecuteNonQuery();
+		}
+
+		public static void UpdateShopProduct(ShopProduct shopProduct)
+		{
+			var command = new SqlCommand("UPDATE ShopProduct SET price = @price WHERE shop_id = @shopId AND product_id = @productId", Connection);
+			command.Parameters.AddWithValue("@shopId", shopProduct.ShopId);
+			command.Parameters.AddWithValue("@productId", shopProduct.ProductId);
+			command.Parameters.AddWithValue("@price", shopProduct.Price);
+			command.ExecuteNonQuery();
+		}
+
+		public static void DeleteShopProduct(string shopId, string productId)
+		{
+			var command = new SqlCommand("DELETE FROM ShopProduct WHERE shop_id = @shopId AND product_id = @productId", Connection);
+			command.Parameters.AddWithValue("@shopId", shopId);
+			command.Parameters.AddWithValue("@productId", productId);
 			command.ExecuteNonQuery();
 		}
 

@@ -104,7 +104,7 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBlock Text="Код:" FontSize="16" Margin="0,0,6,4"/>
-                    <TextBox Text="{Binding EditedId, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" FontSize="16" Margin="0,0,0,4"/>
+                    <TextBox Text="{Binding EditedId, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="{Binding ReadonlyKeys}" Grid.Column="1" FontSize="16" Margin="0,0,0,4"/>
 
                     <TextBlock Text="Назва:" Grid.Row="1" FontSize="16" Margin="0,0,6,4"/>
                     <TextBox Text="{Binding EditedName, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="1" FontSize="16" Margin="0,0,0,4"/>

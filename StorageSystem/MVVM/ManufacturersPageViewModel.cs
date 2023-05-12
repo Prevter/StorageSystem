@@ -19,7 +19,14 @@ namespace StorageSystem.MVVM
 		private Visibility _modalVisibility = Visibility.Collapsed;
 
 		private RelayCommand _addManufacturerCommand, _removeManufacturersCommand, _saveCommand, _abortCommand, _editCommand;
+		private bool _readonlyKeys;
 
+		public bool ReadonlyKeys
+		{
+			get => _readonlyKeys;
+			set => SetField(ref _readonlyKeys, value);
+		}
+		
 		public Visibility EditModeControls
 		{
 			get => DatabaseController.ReadonlyAccess ? Visibility.Collapsed : Visibility.Visible;
@@ -57,7 +64,7 @@ namespace StorageSystem.MVVM
 				EditedId = "M";
 				EditedName = "";
 				EditedContacts = "";
-
+				ReadonlyKeys = false;
 				ModalVisibility = Visibility.Visible;
 			});
 		}
@@ -120,7 +127,7 @@ namespace StorageSystem.MVVM
 								m.Contacts = EditedContacts;
 							}
 
-							DatabaseController.UpdateManufacturer(_editedStartId, manufacturer);
+							DatabaseController.UpdateManufacturer(manufacturer);
 						});
 					}
 
@@ -143,7 +150,7 @@ namespace StorageSystem.MVVM
 					EditedId = manufacturer.Id;
 					EditedName = manufacturer.Name;
 					EditedContacts = manufacturer.Contacts;
-
+					ReadonlyKeys = true;
 					ModalVisibility = Visibility.Visible;
 				}
 			});
@@ -152,6 +159,8 @@ namespace StorageSystem.MVVM
 		public ManufacturersPageViewModel()
 		{
 			Manufacturers = new();
+			if (!DatabaseController.IsConnected()) return;
+
 			foreach (var m in DatabaseController.GetManufacturers())
 				Manufacturers.Add(new ManufacturerVM(m));
 		}
