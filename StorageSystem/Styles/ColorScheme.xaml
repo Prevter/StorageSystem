@@ -7,9 +7,9 @@
     <!-- Tabs -->
     <SolidColorBrush x:Key="TabBorder" Color="#6e7681"/>
     <SolidColorBrush x:Key="TabBackground" Color="#aaaaaa"/>
-    <SolidColorBrush x:Key="TabForeground" Color="White"/>
+    <SolidColorBrush x:Key="TabForeground" Color="#333333"/>
     <SolidColorBrush x:Key="SelectedTabBackground" Color="#dedede"/>
-    <SolidColorBrush x:Key="SelectedTabForeground" Color="White"/>
+    <SolidColorBrush x:Key="SelectedTabForeground" Color="Black"/>
 
     <!-- Buttons -->
     <SolidColorBrush x:Key="ButtonsBackground" Color="#f0f0f0"/>

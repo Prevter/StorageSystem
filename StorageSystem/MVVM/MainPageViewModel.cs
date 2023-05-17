@@ -56,7 +56,6 @@ namespace StorageSystem.MVVM
 		{
 			get => _logoutCommand ??= new RelayCommand(obj =>
 			{
-				// TODO: Disconnect from database
 				App.ChangePage("../Pages/LoginPage.xaml", "Вхід");
 			});
 		}

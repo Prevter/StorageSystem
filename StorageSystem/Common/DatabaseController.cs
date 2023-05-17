@@ -2,6 +2,7 @@
 using StorageSystem.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
 
 namespace StorageSystem.Common
 {
@@ -387,6 +388,51 @@ namespace StorageSystem.Common
 			command.Parameters.AddWithValue("@storageId", storageId);
 			command.Parameters.AddWithValue("@shopId", shopId);
 			command.ExecuteNonQuery();
+		}
+
+		#endregion
+
+		#region Views
+
+		public static DataTable LoadProductsReport()
+		{
+			DataTable dataTable = new();
+
+			var command = new SqlCommand("SELECT * FROM ProductDetails", Connection);
+			var reader = command.ExecuteReader();
+
+			dataTable.Load(reader);
+			reader.Close();
+
+			return dataTable;
+		}
+
+		public static DataTable LoadShopsReport(string shop_id)
+		{
+			DataTable dataTable = new();
+
+			var command = new SqlCommand("SELECT * FROM ShopInventory WHERE shop_id = @id", Connection);
+			command.Parameters.AddWithValue("@id", shop_id);
+			var reader = command.ExecuteReader();
+
+			dataTable.Load(reader);
+			reader.Close();
+
+			return dataTable;
+		}
+
+		public static DataTable LoadStoragesReport(string shop_id)
+		{
+			DataTable dataTable = new();
+
+			var command = new SqlCommand("SELECT * FROM StorageInventory WHERE storage_id = @id", Connection);
+			command.Parameters.AddWithValue("@id", shop_id);
+			var reader = command.ExecuteReader();
+
+			dataTable.Load(reader);
+			reader.Close();
+
+			return dataTable;
 		}
 
 		#endregion

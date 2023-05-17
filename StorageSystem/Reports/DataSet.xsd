@@ -1,0 +1,182 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="DataSet" targetNamespace="http://tempuri.org/DataSet.xsd" xmlns:mstns="http://tempuri.org/DataSet.xsd" xmlns="http://tempuri.org/DataSet.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections>
+          <Connection ConnectionStringObject="Data Source=HOME-PC\SQLEXPRESS;Initial Catalog=StorageSystem;Integrated Security=True" IsAppSettingsProperty="false" Modifier="Assembly" Name="StorageSystemConnectionString" ParameterPrefix="@" Provider="Microsoft.Data.SqlClient" />
+        </Connections>
+        <Tables>
+          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="ProductDetailsTableAdapter" GeneratorDataComponentClassName="ProductDetailsTableAdapter" Name="ProductDetails" UserDataComponentName="ProductDetailsTableAdapter">
+            <MainSource>
+              <DbSource ConnectionRef="StorageSystemConnectionString" DbObjectName="StorageSystem.dbo.ProductDetails" DbObjectType="View" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetData" UserSourceName="Fill">
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>SELECT product_id, product_name, manufacturer_name, contacts FROM dbo.ProductDetails</CommandText>
+                    <Parameters />
+                  </DbCommand>
+                </SelectCommand>
+              </DbSource>
+            </MainSource>
+            <Mappings>
+              <Mapping SourceColumn="product_id" DataSetColumn="product_id" />
+              <Mapping SourceColumn="product_name" DataSetColumn="product_name" />
+              <Mapping SourceColumn="manufacturer_name" DataSetColumn="manufacturer_name" />
+              <Mapping SourceColumn="contacts" DataSetColumn="contacts" />
+            </Mappings>
+            <Sources />
+          </TableAdapter>
+          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="ShopInventoryTableAdapter" GeneratorDataComponentClassName="ShopInventoryTableAdapter" Name="ShopInventory" UserDataComponentName="ShopInventoryTableAdapter">
+            <MainSource>
+              <DbSource ConnectionRef="StorageSystemConnectionString" DbObjectName="StorageSystem.dbo.ShopInventory" DbObjectType="View" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetData" UserSourceName="Fill">
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>SELECT shop_id, shop_name, product_id, product_name, price, amount FROM dbo.ShopInventory</CommandText>
+                    <Parameters />
+                  </DbCommand>
+                </SelectCommand>
+              </DbSource>
+            </MainSource>
+            <Mappings>
+              <Mapping SourceColumn="shop_id" DataSetColumn="shop_id" />
+              <Mapping SourceColumn="shop_name" DataSetColumn="shop_name" />
+              <Mapping SourceColumn="product_id" DataSetColumn="product_id" />
+              <Mapping SourceColumn="product_name" DataSetColumn="product_name" />
+              <Mapping SourceColumn="price" DataSetColumn="price" />
+              <Mapping SourceColumn="amount" DataSetColumn="amount" />
+            </Mappings>
+            <Sources />
+          </TableAdapter>
+          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="StorageInventoryTableAdapter" GeneratorDataComponentClassName="StorageInventoryTableAdapter" Name="StorageInventory" UserDataComponentName="StorageInventoryTableAdapter">
+            <MainSource>
+              <DbSource ConnectionRef="StorageSystemConnectionString" DbObjectName="StorageSystem.dbo.StorageInventory" DbObjectType="View" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetData" UserSourceName="Fill">
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>SELECT storage_id, product_id, product_name, amount FROM dbo.StorageInventory</CommandText>
+                    <Parameters />
+                  </DbCommand>
+                </SelectCommand>
+              </DbSource>
+            </MainSource>
+            <Mappings>
+              <Mapping SourceColumn="storage_id" DataSetColumn="storage_id" />
+              <Mapping SourceColumn="product_id" DataSetColumn="product_id" />
+              <Mapping SourceColumn="product_name" DataSetColumn="product_name" />
+              <Mapping SourceColumn="amount" DataSetColumn="amount" />
+            </Mappings>
+            <Sources />
+          </TableAdapter>
+        </Tables>
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="DataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_UserDSName="DataSet" msprop:Generator_DataSetName="DataSet">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="ProductDetails" msprop:Generator_RowEvHandlerName="ProductDetailsRowChangeEventHandler" msprop:Generator_RowDeletedName="ProductDetailsRowDeleted" msprop:Generator_RowDeletingName="ProductDetailsRowDeleting" msprop:Generator_RowEvArgName="ProductDetailsRowChangeEvent" msprop:Generator_TablePropName="ProductDetails" msprop:Generator_RowChangedName="ProductDetailsRowChanged" msprop:Generator_RowChangingName="ProductDetailsRowChanging" msprop:Generator_TableClassName="ProductDetailsDataTable" msprop:Generator_RowClassName="ProductDetailsRow" msprop:Generator_TableVarName="tableProductDetails" msprop:Generator_UserTableName="ProductDetails">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="product_id" msprop:Generator_ColumnPropNameInRow="product_id" msprop:Generator_ColumnPropNameInTable="product_idColumn" msprop:Generator_ColumnVarNameInTable="columnproduct_id" msprop:Generator_UserColumnName="product_id">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="10" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="product_name" msprop:Generator_ColumnPropNameInRow="product_name" msprop:Generator_ColumnPropNameInTable="product_nameColumn" msprop:Generator_ColumnVarNameInTable="columnproduct_name" msprop:Generator_UserColumnName="product_name" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="255" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="manufacturer_name" msprop:Generator_ColumnPropNameInRow="manufacturer_name" msprop:Generator_ColumnPropNameInTable="manufacturer_nameColumn" msprop:Generator_ColumnVarNameInTable="columnmanufacturer_name" msprop:Generator_UserColumnName="manufacturer_name" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="255" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="contacts" msprop:Generator_ColumnPropNameInRow="contacts" msprop:Generator_ColumnPropNameInTable="contactsColumn" msprop:Generator_ColumnVarNameInTable="columncontacts" msprop:Generator_UserColumnName="contacts" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="255" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="ShopInventory" msprop:Generator_RowEvHandlerName="ShopInventoryRowChangeEventHandler" msprop:Generator_RowDeletedName="ShopInventoryRowDeleted" msprop:Generator_RowDeletingName="ShopInventoryRowDeleting" msprop:Generator_RowEvArgName="ShopInventoryRowChangeEvent" msprop:Generator_TablePropName="ShopInventory" msprop:Generator_RowChangedName="ShopInventoryRowChanged" msprop:Generator_RowChangingName="ShopInventoryRowChanging" msprop:Generator_TableClassName="ShopInventoryDataTable" msprop:Generator_RowClassName="ShopInventoryRow" msprop:Generator_TableVarName="tableShopInventory" msprop:Generator_UserTableName="ShopInventory">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="shop_id" msprop:Generator_ColumnPropNameInRow="shop_id" msprop:Generator_ColumnPropNameInTable="shop_idColumn" msprop:Generator_ColumnVarNameInTable="columnshop_id" msprop:Generator_UserColumnName="shop_id">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="10" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="shop_name" msprop:Generator_ColumnPropNameInRow="shop_name" msprop:Generator_ColumnPropNameInTable="shop_nameColumn" msprop:Generator_ColumnVarNameInTable="columnshop_name" msprop:Generator_UserColumnName="shop_name" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="255" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="product_id" msprop:Generator_ColumnPropNameInRow="product_id" msprop:Generator_ColumnPropNameInTable="product_idColumn" msprop:Generator_ColumnVarNameInTable="columnproduct_id" msprop:Generator_UserColumnName="product_id">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="10" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="product_name" msprop:Generator_ColumnPropNameInRow="product_name" msprop:Generator_ColumnPropNameInTable="product_nameColumn" msprop:Generator_ColumnVarNameInTable="columnproduct_name" msprop:Generator_UserColumnName="product_name" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="255" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="price" msprop:Generator_ColumnPropNameInRow="price" msprop:Generator_ColumnPropNameInTable="priceColumn" msprop:Generator_ColumnVarNameInTable="columnprice" msprop:Generator_UserColumnName="price" type="xs:decimal" minOccurs="0" />
+              <xs:element name="amount" msprop:Generator_ColumnPropNameInRow="amount" msprop:Generator_ColumnPropNameInTable="amountColumn" msprop:Generator_ColumnVarNameInTable="columnamount" msprop:Generator_UserColumnName="amount" type="xs:int" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="StorageInventory" msprop:Generator_RowEvHandlerName="StorageInventoryRowChangeEventHandler" msprop:Generator_RowDeletedName="StorageInventoryRowDeleted" msprop:Generator_RowDeletingName="StorageInventoryRowDeleting" msprop:Generator_RowEvArgName="StorageInventoryRowChangeEvent" msprop:Generator_TablePropName="StorageInventory" msprop:Generator_RowChangedName="StorageInventoryRowChanged" msprop:Generator_RowChangingName="StorageInventoryRowChanging" msprop:Generator_TableClassName="StorageInventoryDataTable" msprop:Generator_RowClassName="StorageInventoryRow" msprop:Generator_TableVarName="tableStorageInventory" msprop:Generator_UserTableName="StorageInventory">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="storage_id" msprop:Generator_ColumnPropNameInRow="storage_id" msprop:Generator_ColumnPropNameInTable="storage_idColumn" msprop:Generator_ColumnVarNameInTable="columnstorage_id" msprop:Generator_UserColumnName="storage_id">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="10" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="product_id" msprop:Generator_ColumnPropNameInRow="product_id" msprop:Generator_ColumnPropNameInTable="product_idColumn" msprop:Generator_ColumnVarNameInTable="columnproduct_id" msprop:Generator_UserColumnName="product_id">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="10" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="product_name" msprop:Generator_ColumnPropNameInRow="product_name" msprop:Generator_ColumnPropNameInTable="product_nameColumn" msprop:Generator_ColumnVarNameInTable="columnproduct_name" msprop:Generator_UserColumnName="product_name" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="255" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="amount" msprop:Generator_ColumnPropNameInRow="amount" msprop:Generator_ColumnPropNameInTable="amountColumn" msprop:Generator_ColumnVarNameInTable="columnamount" msprop:Generator_UserColumnName="amount" type="xs:int" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+    <xs:unique name="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:ProductDetails" />
+      <xs:field xpath="mstns:product_id" />
+    </xs:unique>
+  </xs:element>
+</xs:schema>
