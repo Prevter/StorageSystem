@@ -295,7 +295,7 @@
         <DataSetName>ProductsDetailsDataset</DataSetName>
         <Top>0.36724cm</Top>
         <Height>1.22646cm</Height>
-        <Width>16.51cm</Width>
+        <Width>16.51001cm</Width>
         <Style>
           <Border>
             <Style>None</Style>
@@ -371,8 +371,9 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>PageNumber</rd:DefaultName>
+          <Top>0cm</Top>
           <Height>0.6cm</Height>
-          <Width>15.8375cm</Width>
+          <Width>16.51cm</Width>
           <Style>
             <Border>
               <Style>None</Style>
