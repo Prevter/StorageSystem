@@ -1,15 +1,13 @@
-﻿using System.Windows.Controls;
-
-namespace StorageSystem.Pages
+﻿namespace StorageSystem.Pages
 {
-	/// <summary>
-	/// Interaction logic for ShopsPage.xaml
-	/// </summary>
-	public partial class ShopsPage
-	{
-		public ShopsPage()
-		{
-			InitializeComponent();
-		}
-	}
+    /// <summary>
+    /// Interaction logic for ShopsPage.xaml
+    /// </summary>
+    public partial class ShopsPage
+    {
+        public ShopsPage()
+        {
+            InitializeComponent();
+        }
+    }
 }

@@ -231,7 +231,7 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBlock Text="Продукт:" Margin="0,0,6,4" VerticalAlignment="Center"/>
-                    <ComboBox ItemsSource="{Binding Products}" IsEnabled="{Binding ReadonlyKeys, Converter={StaticResource InvertBool}}" SelectedItem="{Binding EditedProduct}" Grid.Column="1" FontSize="16" Margin="0,0,0,4"/>
+                    <ComboBox ItemsSource="{Binding Products}" IsEnabled="{Binding ReadonlyKeys, Converter={StaticResource InverseBooleanConverter}}" SelectedItem="{Binding EditedProduct}" Grid.Column="1" FontSize="16" Margin="0,0,0,4"/>
 
                     <TextBlock Text="Ціна:" Grid.Row="1" Margin="0,0,6,4" VerticalAlignment="Center"/>
                     <fuic:NumericTextBox Text="{Binding EditedPrice, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="1" Margin="0,0,0,4"/>

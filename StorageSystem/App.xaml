@@ -7,7 +7,6 @@
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
-            <common:InverseBooleanConverter x:Key="InvertBool"/>
             <ResourceDictionary.MergedDictionaries>
                 <fui:Resources/>
                 <ResourceDictionary Source="Assets/StorageIcon.xaml"/>

@@ -211,10 +211,10 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBlock Text="Магазин:" Margin="0,0,6,4" VerticalAlignment="Center"/>
-                    <ComboBox ItemsSource="{Binding Shops}" IsEnabled="{Binding ReadonlyKeys, Converter={StaticResource InvertBool}}" SelectedItem="{Binding EditedProductShop}" Grid.Column="1" FontSize="16" Margin="0,0,0,4"/>
+                    <ComboBox ItemsSource="{Binding Shops}" IsEnabled="{Binding ReadonlyKeys, Converter={StaticResource InverseBooleanConverter}}" SelectedItem="{Binding EditedProductShop}" Grid.Column="1" FontSize="16" Margin="0,0,0,4"/>
 
                     <TextBlock Text="Продукт:" Grid.Row="1" Margin="0,0,6,4" VerticalAlignment="Center"/>
-                    <ComboBox ItemsSource="{Binding Products}" Grid.Row="1" IsEnabled="{Binding ReadonlyKeys, Converter={StaticResource InvertBool}}" SelectedItem="{Binding EditedProduct}" Grid.Column="1" FontSize="16" Margin="0,0,0,4"/>
+                    <ComboBox ItemsSource="{Binding Products}" Grid.Row="1" IsEnabled="{Binding ReadonlyKeys, Converter={StaticResource InverseBooleanConverter}}" SelectedItem="{Binding EditedProduct}" Grid.Column="1" FontSize="16" Margin="0,0,0,4"/>
 
                     <TextBlock Text="Кількість:" Grid.Row="2" Margin="0,0,6,4" VerticalAlignment="Center"/>
                     <fuic:NumericTextBox IsDecimal="False" Text="{Binding EditedProductAmount, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="2" FontSize="16" Margin="0,0,0,4"/>
