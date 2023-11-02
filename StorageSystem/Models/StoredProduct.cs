@@ -1,4 +1,5 @@
-﻿using StorageSystem.MVVM;
+﻿using FloxelLib.MVVM;
+using StorageSystem.MVVM;
 
 namespace StorageSystem.Models
 {
@@ -10,43 +11,22 @@ namespace StorageSystem.Models
 		public int Amount { get; set; }
 	}
 
-	public sealed class StoredProductVM : BaseViewModel
+	public sealed partial class StoredProductVM : BaseViewModel
 	{
+		[UpdateProperty]
 		private StorageVM _storage;
+
+		[UpdateProperty]
 		private ProductVM _product;
+
+		[UpdateProperty]
 		private ShopVM _shop;
+
+		[UpdateProperty]
 		private int _amount;
+
+		[UpdateProperty]
 		private bool _selected;
-
-		public StorageVM Storage
-		{
-			get => _storage;
-			set => SetField(ref _storage, value);
-		}
-
-		public ProductVM Product
-		{
-			get => _product;
-			set => SetField(ref _product, value);
-		}
-
-		public ShopVM Shop
-		{
-			get => _shop;
-			set => SetField(ref _shop, value);
-		}
-
-		public int Amount
-		{
-			get => _amount;
-			set => SetField(ref _amount, value);
-		}
-
-		public bool Selected
-		{
-			get => _selected;
-			set => SetField(ref _selected, value);
-		}
 
 		public StoredProductVM(ProductVM product, ShopVM shop, StorageVM storage, int amount)
 		{

@@ -1,4 +1,5 @@
-﻿using StorageSystem.MVVM;
+﻿using FloxelLib.MVVM;
+using StorageSystem.MVVM;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,10 +17,15 @@ namespace StorageSystem.Models
 		public string Location { get; set; }
 	}
 
-	public sealed class ShopVM : BaseViewModel
+	public sealed partial class ShopVM : BaseViewModel
 	{
+		[UpdateProperty]
 		private string _id, _name, _location;
+
+		[UpdateProperty]
 		private int _floor;
+
+		[UpdateProperty]
 		private bool _selected;
 
 		public ShopVM()
@@ -34,36 +40,6 @@ namespace StorageSystem.Models
 			_location = shop.Location;
 			_floor = shop.Floor;
 			_selected = false;
-		}
-
-		public string Id
-		{
-			get => _id;
-			set => SetField(ref _id, value);
-		}
-
-		public string Name
-		{
-			get => _name;
-			set => SetField(ref _name, value);
-		}
-
-		public string Location
-		{
-			get => _location;
-			set => SetField(ref _location, value);
-		}
-
-		public int Floor
-		{
-			get => _floor;
-			set => SetField(ref _floor, value);
-		}
-
-		public bool Selected
-		{
-			get => _selected;
-			set => SetField(ref _selected, value);
 		}
 
 		public override string ToString()

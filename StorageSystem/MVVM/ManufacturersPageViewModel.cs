@@ -1,168 +1,135 @@
-﻿using StorageSystem.Common;
+﻿using FloxelLib;
+using FloxelLib.MVVM;
+using StorageSystem.Common;
 using StorageSystem.Models;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
+using MessageBox = FloxelLib.Common.MessageBox;
 
 namespace StorageSystem.MVVM
 {
-	public sealed class ManufacturersPageViewModel : BaseViewModel
-	{
-		public ObservableCollection<ManufacturerVM> Manufacturers { get; set; }
+    public sealed partial class ManufacturersPageViewModel : BaseViewModel
+    {
+        public ObservableCollection<ManufacturerVM> Manufacturers { get; set; }
 
-		private string? _editedStartId; // null when creating
-		private string _editedId, _editedName, _editedContacts;
-		private Visibility _modalVisibility = Visibility.Collapsed;
+        private string? _editedStartId; // null when creating
 
-		private RelayCommand _addManufacturerCommand, _removeManufacturersCommand, _saveCommand, _abortCommand, _editCommand;
-		private bool _readonlyKeys;
+        [UpdateProperty]
+        private string _editedId, _editedName, _editedContacts;
 
-		public bool ReadonlyKeys
-		{
-			get => _readonlyKeys;
-			set => SetField(ref _readonlyKeys, value);
-		}
-		
-		public Visibility EditModeControls
-		{
-			get => DatabaseController.ReadonlyAccess ? Visibility.Collapsed : Visibility.Visible;
-		}
+        [UpdateProperty]
+        private Visibility _modalVisibility = Visibility.Collapsed;
 
-		public Visibility ModalVisibility
-		{
-			get => _modalVisibility;
-			set => SetField(ref _modalVisibility, value);
-		}
+        [UpdateProperty]
+        private bool _readonlyKeys;
 
-		public string EditedId
-		{
-			get => _editedId;
-			set => SetField(ref _editedId, value);
-		}
+        public Visibility EditModeControls
+        {
+            get => DatabaseController.ReadonlyAccess ? Visibility.Collapsed : Visibility.Visible;
+        }
 
-		public string EditedName
-		{
-			get => _editedName;
-			set => SetField(ref _editedName, value);
-		}
+        [RelayCommand]
+        private void AddManufacturer()
+        {
+            _editedStartId = null;
+            EditedId = "M";
+            EditedName = "";
+            EditedContacts = "";
+            ReadonlyKeys = false;
+            ModalVisibility = Visibility.Visible;
+        }
 
-		public string EditedContacts
-		{
-			get => _editedContacts;
-			set => SetField(ref _editedContacts, value);
-		}
+        [RelayCommand]
+        public void RemoveManufacturers()
+        {
+            var selected = Manufacturers.Where(m => m.Selected).ToList();
+            if (!selected.Any())
+                return;
 
-		public RelayCommand AddManufacturerCommand
-		{
-			get => _addManufacturerCommand ??= new RelayCommand(obj =>
-			{
-				_editedStartId = null;
-				EditedId = "M";
-				EditedName = "";
-				EditedContacts = "";
-				ReadonlyKeys = false;
-				ModalVisibility = Visibility.Visible;
-			});
-		}
+            if (MessageBox.Show(
+                    $"Ви впевнені що хочете видалити {selected.Count} виробників?",
+                    "Ви впевнені?",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question
+                ) != FloxelLib.Common.MessageBoxResult.Yes) return;
 
-		public RelayCommand RemoveManufacturersCommand
-		{
-			get => _removeManufacturersCommand ??= new RelayCommand(obj =>
-			{
-				var selected = Manufacturers.Where(m => m.Selected).ToList();
-				if (!selected.Any())
-					return;
+            selected.ForEach(m => DatabaseController.DeleteManufacturer(m.Id));
 
-				if (MessageBox.Show(
-						$"Ви впевнені що хочете видалити {selected.Count} виробників?", 
-						"Ви впевнені?", 
-						MessageBoxButton.YesNo, 
-						MessageBoxImage.Question
-					) != MessageBoxResult.Yes) return;
+            Manufacturers.RemoveAll(manufacturer => manufacturer.Selected);
+            Manufacturers.ForEach(manufacturer => manufacturer.Selected = false);
+        }
 
-				selected.ForEach(m => DatabaseController.DeleteManufacturer(m.Id));
+        [RelayCommand]
+        public void Abort()
+        {
+            ModalVisibility = Visibility.Hidden;
+        }
 
-				Manufacturers.RemoveAll(manufacturer => manufacturer.Selected);
-				Manufacturers.ForEach(manufacturer => manufacturer.Selected = false);
-			});
-		}
+        [RelayCommand]
+        public void Save()
+        {
+            try
+            {
+                var manufacturer = new Manufacturer
+                {
+                    Id = EditedId,
+                    Name = EditedName,
+                    Contacts = EditedContacts
+                };
 
-		public RelayCommand AbortCommand
-		{
-			get => _abortCommand ??= new RelayCommand(obj => ModalVisibility = Visibility.Hidden);
-		}
+                if (_editedStartId is null)
+                {
+                    // Create new
+                    DatabaseController.InsertManufacturer(manufacturer);
+                    Manufacturers.Add(new ManufacturerVM(manufacturer));
+                }
+                else
+                {
+                    // Edit where id == _editedStartId
+                    Manufacturers.ForEach(m =>
+                    {
+                        if (m.Id == _editedStartId)
+                        {
+                            m.Id = EditedId;
+                            m.Name = EditedName;
+                            m.Contacts = EditedContacts;
+                        }
 
-		public RelayCommand SaveCommand
-		{
-			get => _saveCommand ??= new RelayCommand(obj =>
-			{
-				try
-				{
-					var manufacturer = new Manufacturer
-					{
-						Id = EditedId,
-						Name = EditedName,
-						Contacts = EditedContacts
-					};
+                        DatabaseController.UpdateManufacturer(manufacturer);
+                    });
+                }
 
-					if (_editedStartId is null)
-					{
-						// Create new
-						DatabaseController.InsertManufacturer(manufacturer);
-						Manufacturers.Add(new ManufacturerVM(manufacturer));
-					}
-					else
-					{
-						// Edit where id == _editedStartId
-						Manufacturers.ForEach(m =>
-						{
-							if (m.Id == _editedStartId)
-							{
-								m.Id = EditedId;
-								m.Name = EditedName;
-								m.Contacts = EditedContacts;
-							}
+                ModalVisibility = Visibility.Hidden;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Помилка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
 
-							DatabaseController.UpdateManufacturer(manufacturer);
-						});
-					}
+        [RelayCommand]
+        public void Edit(object obj)
+        {
+            if (obj is ManufacturerVM manufacturer)
+            {
+                _editedStartId = manufacturer.Id;
+                EditedId = manufacturer.Id;
+                EditedName = manufacturer.Name;
+                EditedContacts = manufacturer.Contacts;
+                ReadonlyKeys = true;
+                ModalVisibility = Visibility.Visible;
+            }
+        }
 
-					ModalVisibility = Visibility.Hidden;
-				}
-				catch (Exception ex)
-				{
-					MessageBox.Show(ex.Message, "Помилка", MessageBoxButton.OK, MessageBoxImage.Error);
-				}
-			});
-		}
+        public ManufacturersPageViewModel()
+        {
+            Manufacturers = new();
+            if (!DatabaseController.IsConnected()) return;
 
-		public RelayCommand EditCommand
-		{
-			get => _editCommand ??= new RelayCommand(obj =>
-			{
-				if (obj is ManufacturerVM manufacturer)
-				{
-					_editedStartId = manufacturer.Id;
-					EditedId = manufacturer.Id;
-					EditedName = manufacturer.Name;
-					EditedContacts = manufacturer.Contacts;
-					ReadonlyKeys = true;
-					ModalVisibility = Visibility.Visible;
-				}
-			});
-		}
-
-		public ManufacturersPageViewModel()
-		{
-			Manufacturers = new();
-			if (!DatabaseController.IsConnected()) return;
-
-			foreach (var m in DatabaseController.GetManufacturers())
-				Manufacturers.Add(new ManufacturerVM(m));
-		}
-	}
+            foreach (var m in DatabaseController.GetManufacturers())
+                Manufacturers.Add(new ManufacturerVM(m));
+        }
+    }
 }

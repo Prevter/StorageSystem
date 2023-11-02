@@ -1,4 +1,5 @@
-﻿using StorageSystem.MVVM;
+﻿using FloxelLib.MVVM;
+using StorageSystem.MVVM;
 
 namespace StorageSystem.Models
 {
@@ -8,29 +9,14 @@ namespace StorageSystem.Models
 		public string Address { get; set; }
 	}
 
-	public sealed class StorageVM : BaseViewModel
+	public sealed partial class StorageVM : BaseViewModel
 	{
+		[UpdateProperty]
 		private string _id, _address;
+
+		[UpdateProperty]
 		private bool _selected;
 
-		public string Id
-		{
-			get => _id;
-			set => SetField(ref _id, value);
-		}
-
-		public string Address
-		{
-			get => _address;
-			set => SetField(ref _address, value);
-		}
-
-		public bool Selected
-		{
-			get => _selected;
-			set => SetField(ref _selected, value);
-		}
-		
 		public StorageVM(Storage storage)
 		{
 			Id = storage.Id.Trim();

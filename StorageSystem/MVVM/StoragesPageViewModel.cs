@@ -1,4 +1,6 @@
-﻿using StorageSystem.Common;
+﻿using FloxelLib;
+using FloxelLib.MVVM;
+using StorageSystem.Common;
 using StorageSystem.Models;
 using System;
 using System.Collections.Generic;
@@ -9,65 +11,54 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
+using MessageBox = FloxelLib.Common.MessageBox;
+using MessageBoxResult = FloxelLib.Common.MessageBoxResult;
+
 namespace StorageSystem.MVVM
 {
-    public sealed class StoragesPageViewModel : BaseViewModel
-    {
-        public ObservableCollection<StorageVM> Storages { get; set; }
+	public sealed partial class StoragesPageViewModel : BaseViewModel
+	{
+		public ObservableCollection<StorageVM> Storages { get; set; }
 		public ObservableCollection<ShopVM> Shops { get; set; }
 		public ObservableCollection<ProductVM> AllProducts { get; set; }
 		public ObservableCollection<ProductVM> Products { get; set; }
 		public ObservableCollection<StoredProductVM> StoredProducts { get; set; }
 
 		private string? _editedStartId; // null when creating
+
+		[UpdateProperty]
 		private string _editedId, _editedAddress;
+
+		[UpdateProperty]
 		private StorageVM _editedProductStorage;
-		private RelayCommand _addStorageCommand, _removeStoragesCommand, _editCommand, _saveCommand, _abortCommand;
 
 		private string? _editedProductId, _editedProductShopId;
+
 		private ShopVM _editedProductShop;
+
+		[UpdateProperty]
 		private ProductVM _editedProduct;
+
+		[UpdateProperty]
 		private string _editedProductAmount;
-		private RelayCommand _addProductCommand, _removeProductsCommand, _editProductsCommand, _editProductCommand, _abortProductCommand, _saveProductCommand;
 
-		private Visibility _modalVisibility = Visibility.Collapsed;
-		private Visibility _productsModalVisibility = Visibility.Collapsed;
-		private Visibility _productModalVisibility = Visibility.Collapsed;
+		[UpdateProperty]
+		private Visibility _modalVisibility = Visibility.Collapsed,
+			_productsModalVisibility = Visibility.Collapsed,
+			_productModalVisibility = Visibility.Collapsed;
+
+		[UpdateProperty]
 		private bool _readonlyKeys;
-
-		public bool ReadonlyKeys
-		{
-			get => _readonlyKeys;
-			set => SetField(ref _readonlyKeys, value);
-		}
 
 		public Visibility EditModeControls
 		{
 			get => DatabaseController.ReadonlyAccess ? Visibility.Collapsed : Visibility.Visible;
 		}
 
-		public Visibility ModalVisibility
-		{
-			get => _modalVisibility;
-			set => SetField(ref _modalVisibility, value);
-		}
-
-		public Visibility ProductModalVisibility
-		{
-			get => _productModalVisibility;
-			set => SetField(ref _productModalVisibility, value);
-		}
-
-		public Visibility ProductsModalVisibility
-		{
-			get => _productsModalVisibility;
-			set => SetField(ref _productsModalVisibility, value);
-		}
-
 		public ShopVM EditedProductShop
 		{
 			get => _editedProductShop;
-			set 
+			set
 			{
 				SetField(ref _editedProductShop, value);
 				// Update products to match the shop
@@ -82,262 +73,216 @@ namespace StorageSystem.MVVM
 			}
 		}
 
-		public ProductVM EditedProduct
+		[RelayCommand]
+		public void AddStorage()
 		{
-			get => _editedProduct;
-			set => SetField(ref _editedProduct, value);
+			_editedStartId = null;
+			EditedId = "S";
+			EditedAddress = "";
+			ReadonlyKeys = false;
+			ModalVisibility = Visibility.Visible;
 		}
 
-		public string EditedProductAmount
+		[RelayCommand]
+		public void Edit(object obj)
 		{
-			get => _editedProductAmount;
-			set => SetField(ref _editedProductAmount, value);
-		}
-
-		public string EditedId
-		{
-			get => _editedId;
-			set => SetField(ref _editedId, value);
-		}
-
-		public string EditedAddress
-		{
-			get => _editedAddress;
-			set => SetField(ref _editedAddress, value);
-		}
-
-		public RelayCommand AddStorageCommand
-		{
-			get => _addStorageCommand ??= new RelayCommand(obj =>
+			if (obj is StorageVM storage)
 			{
-				_editedStartId = null;
-				EditedId = "S";
-				EditedAddress = "";
-				ReadonlyKeys = false;
+				_editedStartId = storage.Id;
+				EditedId = storage.Id;
+				EditedAddress = storage.Address;
+				ReadonlyKeys = true;
 				ModalVisibility = Visibility.Visible;
-			});
+			}
 		}
 
-		public RelayCommand EditCommand
+		[RelayCommand]
+		public void RemoveStorages()
 		{
-			get => _editCommand ??= new RelayCommand(obj =>
+			var selected = Storages.Where(s => s.Selected).ToList();
+			if (!selected.Any())
+				return;
+
+			if (MessageBox.Show(
+					$"Ви впевнені що хочете видалити {selected.Count} складів?",
+					"Ви впевнені?",
+					MessageBoxButton.YesNo,
+					MessageBoxImage.Question
+				) != MessageBoxResult.Yes) return;
+
+			selected.ForEach(s => DatabaseController.DeleteStorage(s.Id));
+
+			Storages.RemoveAll(storage => storage.Selected);
+			Storages.ForEach(storage => storage.Selected = false);
+		}
+
+		[RelayCommand]
+		public void Abort()
+		{
+			ProductsModalVisibility = Visibility.Hidden;
+			ProductModalVisibility = Visibility.Hidden;
+			ModalVisibility = Visibility.Hidden;
+		}
+
+		[RelayCommand]
+		public void AbortProduct()
+		{
+			ProductModalVisibility = Visibility.Hidden;
+		}
+
+		[RelayCommand]
+		public void Save()
+		{
+			try
 			{
-				if (obj is StorageVM storage)
+				var storage = new Storage
 				{
-					_editedStartId = storage.Id;
-					EditedId = storage.Id;
-					EditedAddress = storage.Address;
-					ReadonlyKeys = true;
-					ModalVisibility = Visibility.Visible;
+					Id = EditedId,
+					Address = EditedAddress
+				};
+
+				if (_editedStartId is null)
+				{
+					// Create new
+					DatabaseController.InsertStorage(storage);
+					Storages.Add(new StorageVM(storage));
 				}
-			});
-		}
-
-		public RelayCommand RemoveStoragesCommand
-		{
-			get => _removeStoragesCommand ??= new RelayCommand(obj =>
-			{
-				var selected = Storages.Where(s => s.Selected).ToList();
-				if (!selected.Any())
-					return;
-
-				if (MessageBox.Show(
-						$"Ви впевнені що хочете видалити {selected.Count} складів?",
-						"Ви впевнені?",
-						MessageBoxButton.YesNo,
-						MessageBoxImage.Question
-					) != MessageBoxResult.Yes) return;
-
-				selected.ForEach(s => DatabaseController.DeleteStorage(s.Id));
-
-				Storages.RemoveAll(storage => storage.Selected);
-				Storages.ForEach(storage => storage.Selected = false);
-			});
-		}
-
-		public RelayCommand AbortCommand
-		{
-			get => _abortCommand ??= new RelayCommand(obj =>
-			{
-				ProductsModalVisibility = Visibility.Hidden;
-				ProductModalVisibility = Visibility.Hidden;
-				ModalVisibility = Visibility.Hidden;
-			});
-		}
-
-		public RelayCommand AbortProductCommand
-		{
-			get => _abortProductCommand ??= new RelayCommand(obj =>
-			{
-				ProductModalVisibility = Visibility.Hidden;
-			});
-		}
-
-		public RelayCommand SaveCommand
-		{
-			get => _saveCommand ??= new RelayCommand(obj =>
-			{
-				try
+				else
 				{
-					var storage = new Storage
+					// Edit where id == _editedStartId
+					Storages.ForEach(s =>
 					{
-						Id = EditedId,
-						Address = EditedAddress
-					};
-
-					if (_editedStartId is null)
-					{
-						// Create new
-						DatabaseController.InsertStorage(storage);
-						Storages.Add(new StorageVM(storage));
-					}
-					else
-					{
-						// Edit where id == _editedStartId
-						Storages.ForEach(s =>
+						if (s.Id == _editedStartId)
 						{
-							if (s.Id == _editedStartId)
-							{
-								s.Id = EditedId;
-								s.Address = EditedAddress;
-							}
-
-							DatabaseController.UpdateStorage(storage);
-						});
-					}
-
-					ModalVisibility = Visibility.Hidden;
-				}
-				catch (Exception ex)
-				{
-					MessageBox.Show(ex.Message, "Помилка", MessageBoxButton.OK, MessageBoxImage.Error);
-				}
-			});
-		}
-
-		public RelayCommand EditProductsCommand
-		{
-			get => _editProductsCommand ??= new RelayCommand(obj =>
-			{
-				if (obj is StorageVM storage)
-				{
-					var storedProducts = DatabaseController.GetStoredProducts().ToList();
-					StoredProducts.Clear();
-					foreach (var sp in storedProducts)
-					{
-						if (sp.StorageId.Trim() == storage.Id.Trim())
-						{
-							var productVM = AllProducts.First(p => p.Id == sp.ProductId.Trim());
-							var shopVM = Shops.First(s => s.Id == sp.ShopId.Trim());
-							StoredProducts.Add(new StoredProductVM(productVM, shopVM, storage, sp.Amount));
+							s.Id = EditedId;
+							s.Address = EditedAddress;
 						}
-					}
-					_editedProductStorage = storage;
-					ProductsModalVisibility = Visibility.Visible;
+
+						DatabaseController.UpdateStorage(storage);
+					});
 				}
-			});
+
+				ModalVisibility = Visibility.Hidden;
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(ex.Message, "Помилка", MessageBoxButton.OK, MessageBoxImage.Error);
+			}
 		}
 
-		public RelayCommand AddProductCommand
+		[RelayCommand]
+		public void EditProducts(object obj)
 		{
-			get => _addProductCommand ??= new RelayCommand(obj =>
+			if (obj is StorageVM storage)
 			{
-				_editedProductId = null;
-				_editedProductShopId = null;
-				EditedProductShop = Shops.First();
-				EditedProduct = Products.First();
-				EditedProductAmount = "0";
+				var storedProducts = DatabaseController.GetStoredProducts().ToList();
+				StoredProducts.Clear();
+				foreach (var sp in storedProducts)
+				{
+					if (sp.StorageId.Trim() == storage.Id.Trim())
+					{
+						var productVM = AllProducts.First(p => p.Id == sp.ProductId.Trim());
+						var shopVM = Shops.First(s => s.Id == sp.ShopId.Trim());
+						StoredProducts.Add(new StoredProductVM(productVM, shopVM, storage, sp.Amount));
+					}
+				}
+				_editedProductStorage = storage;
+				ProductsModalVisibility = Visibility.Visible;
+			}
+		}
+
+		[RelayCommand]
+		public void AddProduct()
+		{
+			_editedProductId = null;
+			_editedProductShopId = null;
+			EditedProductShop = Shops.First();
+			EditedProduct = Products.First();
+			EditedProductAmount = "0";
+			ProductModalVisibility = Visibility.Visible;
+		}
+
+		[RelayCommand]
+		public void RemoveProducts()
+		{
+			var selected = StoredProducts.Where(sp => sp.Selected).ToList();
+			if (!selected.Any())
+				return;
+
+			if (MessageBox.Show(
+					$"Ви впевнені що хочете видалити {selected.Count} продуктів зі складу?",
+					"Ви впевнені?",
+					MessageBoxButton.YesNo,
+					MessageBoxImage.Question
+				) != MessageBoxResult.Yes) return;
+
+			selected.ForEach(sp => DatabaseController.DeleteStoredProduct(sp.Product.Id, _editedProductStorage.Id, sp.Shop.Id));
+
+			StoredProducts.RemoveAll(sp => sp.Selected);
+			StoredProducts.ForEach(sp => sp.Selected = false);
+		}
+
+		[RelayCommand]
+		public void EditProduct(object obj)
+		{
+			if (obj is StoredProductVM storedProduct)
+			{
+				_editedProductId = storedProduct.Product.Id;
+				EditedProductShop = storedProduct.Shop;
+				EditedProduct = storedProduct.Product;
+				EditedProductAmount = storedProduct.Amount.ToString(CultureInfo.InvariantCulture);
+				ReadonlyKeys = true;
 				ProductModalVisibility = Visibility.Visible;
-			});
+			}
 		}
 
-		public RelayCommand RemoveProductsCommand
+		[RelayCommand]
+		public void SaveProduct()
 		{
-			get => _removeProductsCommand ??= new RelayCommand(obj =>
+			try
 			{
-				var selected = StoredProducts.Where(sp => sp.Selected).ToList();
-				if (!selected.Any())
-					return;
+				if (!int.TryParse(EditedProductAmount, CultureInfo.InvariantCulture, out int amount))
+					throw new Exception("Номер поверху має бути числом");
 
-				if (MessageBox.Show(
-						$"Ви впевнені що хочете видалити {selected.Count} продуктів зі складу?",
-						"Ви впевнені?",
-						MessageBoxButton.YesNo,
-						MessageBoxImage.Question
-					) != MessageBoxResult.Yes) return;
-
-				selected.ForEach(sp => DatabaseController.DeleteStoredProduct(sp.Product.Id, _editedProductStorage.Id, sp.Shop.Id));
-
-				StoredProducts.RemoveAll(sp => sp.Selected);
-				StoredProducts.ForEach(sp => sp.Selected = false);
-			});
-		}
-
-		public RelayCommand EditProductCommand
-		{
-			get => _editProductCommand ??= new RelayCommand(obj =>
-			{
-				if (obj is StoredProductVM storedProduct)
+				var storedProduct = new StoredProduct
 				{
-					_editedProductId = storedProduct.Product.Id;
-					EditedProductShop = storedProduct.Shop;
-					EditedProduct = storedProduct.Product;
-					EditedProductAmount = storedProduct.Amount.ToString(CultureInfo.InvariantCulture);
-					ReadonlyKeys = true;
-					ProductModalVisibility = Visibility.Visible;
+					ProductId = EditedProduct.Id,
+					ShopId = _editedProductShop.Id,
+					StorageId = _editedProductStorage.Id,
+					Amount = amount
+				};
+
+				if (_editedProductId is null)
+				{
+					// Create new
+					DatabaseController.InsertStoredProduct(storedProduct);
+					StoredProducts.Add(new StoredProductVM(EditedProduct, EditedProductShop, _editedProductStorage, amount));
 				}
-			});
-		}
-
-		public RelayCommand SaveProductCommand
-		{
-			get => _saveProductCommand ??= new RelayCommand(obj =>
-			{
-				try
+				else
 				{
-					if (!int.TryParse(EditedProductAmount, CultureInfo.InvariantCulture, out int amount))
-						throw new Exception("Номер поверху має бути числом");
-
-					var storedProduct = new StoredProduct
+					StoredProducts.ForEach(sp =>
 					{
-						ProductId = EditedProduct.Id,
-						ShopId = _editedProductShop.Id,
-						StorageId = _editedProductStorage.Id,
-						Amount = amount
-					};
-
-					if (_editedProductId is null)
-					{
-						// Create new
-						DatabaseController.InsertStoredProduct(storedProduct);
-						StoredProducts.Add(new StoredProductVM(EditedProduct, EditedProductShop, _editedProductStorage, amount));
-					}
-					else
-					{
-						StoredProducts.ForEach(sp =>
+						if (sp.Product.Id == _editedProductId)
 						{
-							if (sp.Product.Id == _editedProductId)
-							{
-								sp.Product = EditedProduct;
-								sp.Shop = EditedProductShop;
-								sp.Amount = amount;
-							}
+							sp.Product = EditedProduct;
+							sp.Shop = EditedProductShop;
+							sp.Amount = amount;
+						}
 
-							DatabaseController.UpdateStoredProduct(storedProduct);
-						});
-					}
+						DatabaseController.UpdateStoredProduct(storedProduct);
+					});
+				}
 
-					ProductModalVisibility = Visibility.Hidden;
-				}
-				catch (Exception ex)
-				{
-					MessageBox.Show(ex.Message, "Помилка", MessageBoxButton.OK, MessageBoxImage.Error);
-				}
-			});
+				ProductModalVisibility = Visibility.Hidden;
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(ex.Message, "Помилка", MessageBoxButton.OK, MessageBoxImage.Error);
+			}
 		}
 
 		public StoragesPageViewModel()
-        {
+		{
 			Storages = new();
 			Shops = new();
 			AllProducts = new();
@@ -355,5 +300,5 @@ namespace StorageSystem.MVVM
 			foreach (var p in DatabaseController.GetProducts())
 				AllProducts.Add(new ProductVM(p, new ManufacturerVM()));
 		}
-    }
+	}
 }

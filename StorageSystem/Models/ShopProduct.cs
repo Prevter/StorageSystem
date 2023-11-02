@@ -1,4 +1,5 @@
-﻿using StorageSystem.MVVM;
+﻿using FloxelLib.MVVM;
+using StorageSystem.MVVM;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,43 +8,26 @@ using System.Threading.Tasks;
 
 namespace StorageSystem.Models
 {
-    public sealed class ShopProduct
-    {
+	public sealed class ShopProduct
+	{
 		public string ShopId { get; set; }
 		public string ProductId { get; set; }
 		public decimal Price { get; set; }
 	}
 
-	public sealed class ShopProductVM : BaseViewModel
+	public sealed partial class ShopProductVM : BaseViewModel
 	{
+		[UpdateProperty]
 		private ShopVM _shop;
+
+		[UpdateProperty]
 		private ProductVM _product;
+
+		[UpdateProperty]
 		private decimal _price;
+
+		[UpdateProperty]
 		private bool _selected;
-
-		public ShopVM Shop
-		{
-			get => _shop;
-			set => SetField(ref _shop, value);
-		}
-
-		public ProductVM Product
-		{
-			get => _product;
-			set => SetField(ref _product, value);
-		}
-
-		public decimal Price
-		{
-			get => _price;
-			set => SetField(ref _price, value);
-		}
-
-		public bool Selected
-		{
-			get => _selected;
-			set => SetField(ref _selected, value);
-		}
 
 		public ShopProductVM(ShopVM shop, ProductVM product, decimal price)
 		{
@@ -51,7 +35,7 @@ namespace StorageSystem.Models
 			Product = product;
 			Price = price;
 		}
-		
+
 		public ShopProduct ToModel()
 		{
 			return new ShopProduct()

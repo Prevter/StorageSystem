@@ -1,4 +1,5 @@
-﻿using StorageSystem.Common;
+﻿using FloxelLib.MVVM;
+using StorageSystem.Common;
 using StorageSystem.Models;
 using System;
 using System.Collections.ObjectModel;

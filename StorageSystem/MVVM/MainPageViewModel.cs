@@ -1,83 +1,52 @@
-﻿using StorageSystem.Assets;
+﻿using FloxelLib.MVVM;
+using StorageSystem.Assets;
 using StorageSystem.Common;
 using System.Collections.Generic;
 
 namespace StorageSystem.MVVM
 {
-	public sealed class NavigationPage : BaseViewModel
+	public sealed partial class NavigationPage : BaseViewModel
 	{
+		[UpdateProperty]
 		private string _filename, _title, _icon;
+
+		[UpdateProperty]
 		private bool _isSelected;
-
-		public string Filename
-		{
-			get => _filename;
-			set => SetField(ref _filename, value);
-		}
-
-		public string Title
-		{
-			get => _title;
-			set => SetField(ref _title, value);
-		}
-
-		public bool IsSelected
-		{
-			get => _isSelected;
-			set => SetField(ref _isSelected, value);
-		}
-
-		public string Icon
-		{
-			get => _icon;
-			set => SetField(ref _icon, value);
-		}
 	}
 
-	public sealed class MainPageViewModel : BaseViewModel
+	public sealed partial class MainPageViewModel : BaseViewModel
 	{
 		public List<NavigationPage> Pages { get; set; }
 
+		[UpdateProperty]
 		private string _currentPage;
-		private RelayCommand _logoutCommand, _selectPageCommand;
 
 		public string Username
 		{
 			get => DatabaseController.Username;
 		}
 
-		public string CurrentPage
+		[RelayCommand]
+		public void Logout()
 		{
-			get => _currentPage;
-			set => SetField(ref _currentPage, value);
+			App.ChangePage("../Pages/LoginPage.xaml", "Вхід");
 		}
 
-		public RelayCommand LogoutCommand
+		[RelayCommand]
+		public void SelectPage(object obj)
 		{
-			get => _logoutCommand ??= new RelayCommand(obj =>
+			if (obj is NavigationPage page)
 			{
-				App.ChangePage("../Pages/LoginPage.xaml", "Вхід");
-			});
-		}
+				foreach (var p in Pages)
+					p.IsSelected = p == page;
 
-		public RelayCommand SelectPageCommand
-		{
-			get => _selectPageCommand ??= new RelayCommand(obj =>
-			{
-				if (obj is NavigationPage page)
-				{
-					foreach (var p in Pages)
-						p.IsSelected = p == page;
-
-					CurrentPage = page.Filename;
-					App.ChangeTitle(page.Title);
-				}
-			});
+				CurrentPage = page.Filename;
+				App.ChangeTitle(page.Title);
+			}
 		}
 
 		public MainPageViewModel()
 		{
-			// TODO: Initialize pages according to permissions
 			Pages = new()
 			{
 				new()

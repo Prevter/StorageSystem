@@ -1,4 +1,5 @@
-﻿using StorageSystem.MVVM;
+﻿using FloxelLib.MVVM;
+using StorageSystem.MVVM;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,10 +15,13 @@ namespace StorageSystem.Models
 		public string ManufacturerId { get; set; }
 	}
 
-	public sealed class ProductVM : BaseViewModel
+	public sealed partial class ProductVM : BaseViewModel
 	{
+		[UpdateProperty]
 		private string _id, _name;
+		[UpdateProperty]
 		private ManufacturerVM _manufacturer;
+		[UpdateProperty]
 		private bool _selected;
 
 		public ProductVM()
@@ -31,30 +35,6 @@ namespace StorageSystem.Models
 			_name = product.Name;
 			_manufacturer = manufacturer;
 			_selected = false;
-		}
-
-		public string Id
-		{
-			get => _id;
-			set => SetField(ref _id, value);
-		}
-
-		public string Name
-		{
-			get => _name;
-			set => SetField(ref _name, value);
-		}
-
-		public ManufacturerVM Manufacturer
-		{
-			get => _manufacturer;
-			set => SetField(ref _manufacturer, value);
-		}
-
-		public bool Selected
-		{
-			get => _selected;
-			set => SetField(ref _selected, value);
 		}
 
 		public override string ToString()
